@@ -2,39 +2,22 @@ package com.closer.citydistance.service.impl;
 
 import com.closer.citydistance.model.City;
 import com.closer.citydistance.model.Distance;
+import com.closer.citydistance.repository.CitiesInMemoryDAO;
 import com.closer.citydistance.service.DistanceService;
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-public class DistanceFromApiServiceImpl implements DistanceService {
+@Primary
+@AllArgsConstructor
+public class DistanceFromDBServiceImpl implements DistanceService {
+    private final CitiesInMemoryDAO repository;
     private final static double  earthRadius = 6371.01;
-    private final WebClient.Builder builder =  WebClient.builder();
-    private final static String geocodingApi = "http://api.openweathermap.org/geo/1.0/direct?";
-    private final static String geocodingApiKey = "";
     @Override
     public Distance findDistance(String city1Name, String city2Name) {
-
-        String url1 = geocodingApi+"q="+city1Name+"&limit=1&appid="+ geocodingApiKey;
-        String url2 = geocodingApi+"q="+city2Name+"&limit=1&appid="+ geocodingApiKey;
-
-
-        City city1 = WebClient.builder()
-                .baseUrl(url1)
-                .build()
-                .get()
-                .uri(url1)
-                .retrieve()
-                .bodyToMono(City.class)
-                .block();
-        City city2 = WebClient.builder()
-                .baseUrl(url2)
-                .build()
-                .get()
-                .uri(url2)
-                .retrieve()
-                .bodyToMono(City.class)
-                .block();
+        City city1 = repository.findCityByName(city1Name);
+        City city2 = repository.findCityByName(city2Name);
 
         if(city1 != null && city2 !=null) {
 

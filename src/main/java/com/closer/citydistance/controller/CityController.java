@@ -1,5 +1,6 @@
 package com.closer.citydistance.controller;
 
+import com.closer.citydistance.model.Distance;
 import com.closer.citydistance.service.DistanceService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ public class CityController {
     private final DistanceService service;
 
     @GetMapping("/{city1Name}+{city2Name}")
-    public double findDistance(@PathVariable String city1Name, @PathVariable String city2Name) {
+    public Distance findDistance(@PathVariable String city1Name, @PathVariable String city2Name) {
         return service.findDistance(city1Name, city2Name);
     }
 }
