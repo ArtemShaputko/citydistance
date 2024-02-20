@@ -15,7 +15,7 @@ public class DistanceFromDBServiceImpl implements DistanceService {
     private final CitiesInMemoryDAO repository;
     private static final double EARTH_RADIUS = 6371.01;
     @Override
-    public Distance findDistance(String city1Name, String city2Name) {
+    public Distance findDistance(String city1Name, String city2Name, String city1Country, String city2Country) {
         City city1 = repository.findCityByName(city1Name);
         City city2 = repository.findCityByName(city2Name);
 
