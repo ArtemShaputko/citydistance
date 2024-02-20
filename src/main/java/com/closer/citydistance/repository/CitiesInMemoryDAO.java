@@ -8,8 +8,8 @@ public class CitiesInMemoryDAO {
     public City findCityByName(String cityName) {
         return City.builder()
                 .name(cityName)
-                .lat((double) System.currentTimeMillis() /10000)
-                .lon((double) System.currentTimeMillis() /10000)
+                .lat((double) System.currentTimeMillis())
+                .lon((double) System.currentTimeMillis())
                 .build();
 
     }

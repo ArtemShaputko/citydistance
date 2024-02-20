@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class DistanceFromApiServiceImpl implements DistanceService {
     private static final double EARTH_RADIUS = 6371.0;
     private final static String GEOCODING_API = "http://api.openweathermap.org/geo/1.0/direct?";
-    private final static String GEOCODING_API_KEY = "";
+    private final static String GEOCODING_API_KEY = "2598379fd45365cefd517bd84023d353";
     @Override
     public Distance findDistance(String city1Name, String city2Name) {
 
