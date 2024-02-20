@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DistanceFromDBServiceImpl implements DistanceService {
     private final CitiesInMemoryDAO repository;
-    private final static double  earthRadius = 6371.01;
+    private static final double EARTH_RADIUS = 6371.01;
     @Override
     public Distance findDistance(String city1Name, String city2Name) {
         City city1 = repository.findCityByName(city1Name);
@@ -28,7 +28,7 @@ public class DistanceFromDBServiceImpl implements DistanceService {
 
             return Distance
                     .builder()
-                    .distance(earthRadius * Math.acos(Math.sin(radLat1) * Math.sin(radLat2)
+                    .length(EARTH_RADIUS * Math.acos(Math.sin(radLat1) * Math.sin(radLat2)
                             + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radLon1 - radLon2)))
                     .city1Name(city1Name)
                     .city2Name(city2Name)

@@ -8,15 +8,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class DistanceFromApiServiceImpl implements DistanceService {
-    private final static double  earthRadius = 6371.01;
-    private final WebClient.Builder builder =  WebClient.builder();
-    private final static String geocodingApi = "http://api.openweathermap.org/geo/1.0/direct?";
-    private final static String geocodingApiKey = "";
+    private static final double EARTH_RADIUS = 6371.0;
+    private final static String GEOCODING_API = "http://api.openweathermap.org/geo/1.0/direct?";
+    private final static String GEOCODING_API_KEY = "";
     @Override
     public Distance findDistance(String city1Name, String city2Name) {
 
-        String url1 = geocodingApi+"q="+city1Name+"&limit=1&appid="+ geocodingApiKey;
-        String url2 = geocodingApi+"q="+city2Name+"&limit=1&appid="+ geocodingApiKey;
+        String url1 = GEOCODING_API +"q="+city1Name+"&limit=1&appid="+ GEOCODING_API_KEY;
+        String url2 = GEOCODING_API +"q="+city2Name+"&limit=1&appid="+ GEOCODING_API_KEY;
 
 
         City city1 = WebClient.builder()
@@ -45,7 +44,7 @@ public class DistanceFromApiServiceImpl implements DistanceService {
 
             return Distance
                     .builder()
-                    .distance(earthRadius * Math.acos(Math.sin(radLat1) * Math.sin(radLat2)
+                    .length(EARTH_RADIUS * Math.acos(Math.sin(radLat1) * Math.sin(radLat2)
                             + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radLon1 - radLon2)))
                     .city1Name(city1Name)
                     .city2Name(city2Name)
