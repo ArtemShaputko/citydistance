@@ -5,9 +5,9 @@ import com.closer.citydistance.model.Distance;
 import com.closer.citydistance.service.CalculatorService;
 import com.closer.citydistance.service.DistanceService;
 import io.github.cdimascio.dotenv.Dotenv;
-import lombok.AllArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
