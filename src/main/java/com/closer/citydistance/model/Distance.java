@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class Distance {
     private double length;
-    private String city1Name;
-    private String city2Name;
+    private String firstCityName;
+    private String secondCityName;
 }

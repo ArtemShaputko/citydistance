@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class CityController {
     private final DistanceService service;
 
-    @GetMapping("/{city1Name}&{city1Country}+{city2Name}&{city2Country}")
-    public Distance findDistance(@PathVariable String city1Name,
-                                 @PathVariable String city1Country,
-                                 @PathVariable String city2Name,
-                                 @PathVariable String city2Country) {
-        return service.findDistance(city1Name, city1Country, city2Name, city2Country );
+    @GetMapping("/{firstCityName}+{secondCityName}")
+    public Distance findDistance(@PathVariable String firstCityName,
+                                 @PathVariable String secondCityName) {
+        return service.findDistance(firstCityName, secondCityName);
     }
 }
