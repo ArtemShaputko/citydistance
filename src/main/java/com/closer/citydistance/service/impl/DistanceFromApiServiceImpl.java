@@ -26,7 +26,8 @@ public class DistanceFromApiServiceImpl implements DistanceService {
 
         String firstCityRequestURL = GEOCODING_API + firstCityName + "&limit=1&appid=" + apiKey;
         String secondCityRequestURL = GEOCODING_API + secondCityName + "&limit=1&appid=" + apiKey;
-        City firstCity, secondCity;
+        City firstCity;
+        City secondCity;
         try {
 
             City[] firstCityResponse = WebClient.builder()
