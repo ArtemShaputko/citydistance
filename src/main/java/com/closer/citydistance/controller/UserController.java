@@ -1,22 +1,29 @@
 package com.closer.citydistance.controller;
 
 import com.closer.citydistance.model.User;
+import com.closer.citydistance.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserController {
-    @RequestMapping("/add")
-    public User add(User usr){
-        return null;
+    final UserService userService;
+    @PostMapping("/add")
+    public User add(@RequestBody User usr){
+        return userService.add(usr);
     }
-    @RequestMapping("/remove")
-    public User remove(User usr){
-        return null;
+    @DeleteMapping("/remove")
+    public void remove(@RequestParam String nickname){
+        userService.remove(nickname);
     }
-    @RequestMapping("/show")
-    public User show(User usr){
-        return null;
+    @GetMapping("/find")
+    public User findByNickname(@RequestParam String nickname){
+        return userService.findByNickname(nickname);
+    }
+    @PutMapping("/update")
+    public User update(@RequestBody User usr){
+        return userService.update(usr);
     }
 }

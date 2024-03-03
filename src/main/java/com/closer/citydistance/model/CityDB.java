@@ -5,20 +5,19 @@ import lombok.Data;
 
 import java.util.Set;
 
+
 @Data
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name="cities")
+public class CityDB {
     @Id
     @GeneratedValue
     private long id;
     private String name;
-    private String surname;
-    @Column(unique = true)
-    private String nickname;
-    @Column(unique = true)
-    private String email;
+    private String country;
+    private double lon;
+    private double lat;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "city")
     Set<CityRating> ratings;
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/city_distance")
 @AllArgsConstructor
-public class CityController {
+public class DistanceController {
     private final DistanceService service;
 
     @GetMapping("/{firstCityName}+{secondCityName}")
