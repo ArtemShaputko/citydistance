@@ -1,24 +1,23 @@
 package com.closer.citydistance.model;
 
-import jakarta.persistence.*;
+import com.closer.citydistance.entity.UserEntity;
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
-@Entity
-@Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue
     private long id;
     private String name;
     private String surname;
-    @Column(unique = true)
     private String nickname;
-    @Column(unique = true)
     private String email;
-
-    @OneToMany(mappedBy = "user")
-    Set<CityRating> ratings;
+    public static User toModel(UserEntity entity){
+        if(entity==null) return null;
+        User model = new User();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setSurname(entity.getSurname());
+        model.setNickname(entity.getNickname());
+        model.setEmail(entity.getEmail());
+        return model;
+    }
 }

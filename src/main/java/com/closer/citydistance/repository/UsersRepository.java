@@ -1,9 +1,9 @@
 package com.closer.citydistance.repository;
 
-import com.closer.citydistance.model.User;
+import com.closer.citydistance.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsersRepository extends JpaRepository<User, Long> {
-    void deleteUserByNickname(String nickname);
-    User findUserByNickname(String nickname);
+public interface UsersRepository extends JpaRepository<UserEntity, Long> {
+    void deleteUserEntityByNickname(String nickname);
+    UserEntity findUserEntityByNickname(String nickname);
 }

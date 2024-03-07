@@ -1,15 +1,24 @@
 package com.closer.citydistance.model;
 
-import lombok.Builder;
+import com.closer.citydistance.entity.CityEntity;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
-@Builder
 public class City {
-    @NonNull
+    private Long id;
     private String name;
     private String country;
     private double lon;
     private double lat;
+
+    public static City toModel(CityEntity entity){
+        if(entity==null) return null;
+        City model = new City();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setCountry(entity.getCountry());
+        model.setLon(entity.getLon());
+        model.setLat(entity.getLat());
+        return model;
+    }
 }

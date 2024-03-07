@@ -1,17 +1,22 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/users_db
-    username: postgres
-    password: admin
+    username: ${USER_DB_NAME}
+    password: ${USER_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+  config:
+    import: optional:secrets.properties[.properties]
+
+apiKey: ${API_KEY}
 
 
