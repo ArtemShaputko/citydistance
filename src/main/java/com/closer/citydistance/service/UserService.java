@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UsersRepository usersRepository;
     private final CityRepository cityRepository;
+    private final String user_not_found = "User not found";
+    private final String city_not_found = "City not found";
     public List<User> getAll(){
         return usersRepository.findAll()
                 .stream().map(User::toModel).toList();
@@ -38,21 +40,21 @@ public class UserService {
     public List<City> getLikedCities(Long userId){
         UserEntity user = usersRepository
                 .findById(userId)
-                .orElseThrow(() -> new DataIntegrityViolationException("User " + userId + " not found"));
+                .orElseThrow(() -> new DataIntegrityViolationException(user_not_found));
         return user.getLikedCities().stream().map(City::toModel).collect(Collectors.toList());
     }
 
     @Transactional
     public UserEntity update(Long userId, UserEntity user){
-        if(!usersRepository.existsById(userId)) throw new DataIntegrityViolationException("User " + userId + " not found");
+        if(!usersRepository.existsById(userId)) throw new DataIntegrityViolationException(user_not_found);
         user.setId(userId);
         return usersRepository.save(user);
     }
     public void setLikeCity(Long userId, Long cityId){
         CityEntity city = cityRepository.findById(cityId)
-                .orElseThrow(() -> new DataIntegrityViolationException("City " + cityId + " not found"));
+                .orElseThrow(() -> new DataIntegrityViolationException(city_not_found));
         UserEntity user = usersRepository
-                .findById(userId).orElseThrow(() -> new DataIntegrityViolationException("User " + userId + " not found"));
+                .findById(userId).orElseThrow(() -> new DataIntegrityViolationException(user_not_found));
         if(!user.getLikedCities().contains(city)) {
             user.getLikedCities().add(city);
         }
