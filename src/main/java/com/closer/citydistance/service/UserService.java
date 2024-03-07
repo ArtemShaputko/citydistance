@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UsersRepository usersRepository;
     private final CityRepository cityRepository;
-    private final static String USER_NOT_FOUND = "User not found";
-    private final static String CITY_NOT_FOUND = "City not found";
+    private static final String USER_NOT_FOUND = "User not found";
+    private static final String CITY_NOT_FOUND = "City not found";
     public List<User> getAll(){
         return usersRepository.findAll()
                 .stream().map(User::toModel).toList();
@@ -45,10 +45,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserEntity update(Long userId, UserEntity user){
+    public void update(Long userId, UserEntity user){
         if(!usersRepository.existsById(userId)) throw new DataIntegrityViolationException(USER_NOT_FOUND);
         user.setId(userId);
-        return usersRepository.save(user);
+        usersRepository.save(user);
     }
     public void setLikeCity(Long userId, Long cityId){
         CityEntity city = cityRepository.findById(cityId)

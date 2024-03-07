@@ -39,9 +39,9 @@ public class CityService {
         return city.getSights().stream().map(Sight::toModel).toList();
     }
     @Transactional
-    public CityEntity update(Long cityId, CityEntity city){
+    public void update(Long cityId, CityEntity city){
         if(!cityRepository.existsById(cityId)) throw new DataIntegrityViolationException("City " + cityId + " not found");
         city.setId(cityId);
-        return cityRepository.save(city);
+        cityRepository.save(city);
     }
 }
