@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class SightService {
     private final SightRepository sightRepository;
     private final CityRepository cityRepository;
+
     @Transactional
     public SightEntity add(Long cityId, SightEntity sight){
         CityEntity city = cityRepository
@@ -28,6 +29,13 @@ public class SightService {
         return Sight.toModel(sightRepository.findById(sightId)
                 .orElseThrow(() -> new DataIntegrityViolationException("Sight not found")));
     }
+    @Transactional
+    public void update(Long sightId, SightEntity sight){
+        if(!sightRepository.existsById(sightId)) throw new DataIntegrityViolationException("Sight not found");
+        sight.setId(sightId);
+        sightRepository.save(sight);
+    }
+    @Transactional
     public void remove(Long sightId){
         sightRepository.deleteById(sightId);
     }

@@ -42,4 +42,15 @@ public class SightController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PutMapping("/update")
+    public ResponseEntity<String> update( @RequestParam(name = "id") Long sightId,
+                                          @RequestBody SightEntity sight){
+        try {
+            sightService.update(sightId, sight);
+            return ResponseEntity.ok().body("Sight updated");
+        }
+        catch (DataIntegrityViolationException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
