@@ -1,5 +1,6 @@
 package com.closer.citydistance.controller;
 
+import com.closer.citydistance.model.Distance;
 import com.closer.citydistance.service.DistanceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,13 @@ public class DistanceController {
     private final DistanceService service;
 
     @GetMapping("/{firstCityName}+{secondCityName}")
-    public ResponseEntity<?> findDistance(@PathVariable String firstCityName,
-                                       @PathVariable String secondCityName) {
+    public ResponseEntity<Distance> findDistance(@PathVariable String firstCityName,
+                                                 @PathVariable String secondCityName) {
         try {
             return ResponseEntity.ok().body(service.findDistance(firstCityName, secondCityName));
         }
         catch (NullPointerException | ArrayIndexOutOfBoundsException e){
-            return ResponseEntity.badRequest().body("City not found");
+            return ResponseEntity.badRequest().build();
         }
     }
 }

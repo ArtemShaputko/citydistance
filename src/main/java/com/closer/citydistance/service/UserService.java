@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,11 +35,11 @@ public class UserService {
         return User.toModel(usersRepository.findById(userId).orElse(null));
     }
     @Transactional
-    public Set<City> getLikedCities(Long userId){
+    public List<City> getLikedCities(Long userId){
         UserEntity user = usersRepository
                 .findById(userId)
                 .orElseThrow(() -> new DataIntegrityViolationException("User " + userId + " not found"));
-        return user.getLikedCities().stream().map(City::toModel).collect(Collectors.toSet());
+        return user.getLikedCities().stream().map(City::toModel).collect(Collectors.toList());
     }
 
     @Transactional

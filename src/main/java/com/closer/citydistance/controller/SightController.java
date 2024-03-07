@@ -1,6 +1,7 @@
 package com.closer.citydistance.controller;
 
 import com.closer.citydistance.entity.SightEntity;
+import com.closer.citydistance.model.Sight;
 import com.closer.citydistance.service.SightService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class SightController {
     private SightService sightService;
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestParam Long cityId, @RequestBody SightEntity sight){
+    public ResponseEntity<String> add(@RequestParam Long cityId, @RequestBody SightEntity sight){
         try {
             sightService.add(cityId, sight);
             return ResponseEntity.ok().body("Sight saved");
@@ -23,16 +24,16 @@ public class SightController {
         }
     }
     @GetMapping("/find")
-    public ResponseEntity<?> find(@RequestParam Long id){
+    public ResponseEntity<Sight> find(@RequestParam Long id){
         try {
             return ResponseEntity.ok().body(sightService.find(id));
         }
         catch (DataIntegrityViolationException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
     @DeleteMapping("/remove")
-    public ResponseEntity<?> remove(@RequestParam Long id){
+    public ResponseEntity<String> remove(@RequestParam Long id){
         try {
             sightService.remove(id);
             return ResponseEntity.ok().body("Sight removed");

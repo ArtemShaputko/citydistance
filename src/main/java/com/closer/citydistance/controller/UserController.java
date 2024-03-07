@@ -1,11 +1,15 @@
 package com.closer.citydistance.controller;
 
 import com.closer.citydistance.entity.UserEntity;
+import com.closer.citydistance.model.City;
+import com.closer.citydistance.model.User;
 import com.closer.citydistance.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -13,17 +17,17 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     final UserService userService;
     @GetMapping("/all")
-    public ResponseEntity<?> getAll()
+    public ResponseEntity<List<User>> getAll()
     {
         try {
             return ResponseEntity.ok().body(userService.getAll());
         }
         catch (DataIntegrityViolationException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody UserEntity user){
+    public ResponseEntity<String> add(@RequestBody UserEntity user){
         try {
             userService.add(user);
             return ResponseEntity.ok().body("User saved");
@@ -33,7 +37,7 @@ public class UserController {
         }
     }
     @DeleteMapping("/remove")
-    public ResponseEntity<?> remove(@RequestParam Long id){
+    public ResponseEntity<String> remove(@RequestParam Long id){
         try {
             userService.remove(id);
             return ResponseEntity.ok().body("User removed");
@@ -43,28 +47,29 @@ public class UserController {
         }
     }
     @GetMapping("/find")
-    public ResponseEntity<?> findById(@RequestParam(name="id") Long userId){
+    public ResponseEntity<User> findById(@RequestParam(name="id") Long userId){
         try {
             return ResponseEntity.ok().body(userService.findById(userId));
         }
         catch (DataIntegrityViolationException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
     @GetMapping("/liked_cities")
-    public ResponseEntity<?> getLikedCities(@RequestParam(name="id") Long userId){
+    public ResponseEntity<List<City>> getLikedCities(@RequestParam(name="id") Long userId){
         try {
             return ResponseEntity.ok().body(userService.getLikedCities(userId));
         }
         catch (DataIntegrityViolationException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
     @PutMapping("/update")
-    public ResponseEntity<?> update( @RequestParam(name = "id") Long userId,
+    public ResponseEntity<String> update( @RequestParam(name = "id") Long userId,
                                     @RequestBody UserEntity user){
         try {
-            return ResponseEntity.ok().body(userService.update(userId, user));
+           userService.update(userId, user);
+           return ResponseEntity.ok().body("User updated");
         }
         catch (DataIntegrityViolationException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -72,7 +77,7 @@ public class UserController {
     }
 
     @PutMapping("/like")
-    public ResponseEntity<?> likeCity(@RequestParam(name="user_id") Long userId,
+    public ResponseEntity<String> likeCity(@RequestParam(name="user_id") Long userId,
                                       @RequestParam(name="city_id") Long cityId){
         try {
             userService.setLikeCity(userId, cityId);

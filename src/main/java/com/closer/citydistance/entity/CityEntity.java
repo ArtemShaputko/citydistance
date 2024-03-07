@@ -23,7 +23,7 @@ public class CityEntity {
     private double lat;
 
     @ManyToMany(mappedBy = "likedCities", fetch = FetchType.LAZY)
-    private List<UserEntity> likes;
+    private List<UserEntity> userLikes;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "city")
     private List<SightEntity> sights;
