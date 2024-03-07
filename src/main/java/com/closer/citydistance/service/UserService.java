@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UsersRepository usersRepository;
     private final CityRepository cityRepository;
-    private final String user_not_found = "User not found";
-    private final String city_not_found = "City not found";
+    private final static String USER_NOT_FOUND = "User not found";
+    private final static String CITY_NOT_FOUND = "City not found";
     public List<User> getAll(){
         return usersRepository.findAll()
                 .stream().map(User::toModel).toList();
@@ -40,21 +40,21 @@ public class UserService {
     public List<City> getLikedCities(Long userId){
         UserEntity user = usersRepository
                 .findById(userId)
-                .orElseThrow(() -> new DataIntegrityViolationException(user_not_found));
+                .orElseThrow(() -> new DataIntegrityViolationException(USER_NOT_FOUND));
         return user.getLikedCities().stream().map(City::toModel).collect(Collectors.toList());
     }
 
     @Transactional
     public UserEntity update(Long userId, UserEntity user){
-        if(!usersRepository.existsById(userId)) throw new DataIntegrityViolationException(user_not_found);
+        if(!usersRepository.existsById(userId)) throw new DataIntegrityViolationException(USER_NOT_FOUND);
         user.setId(userId);
         return usersRepository.save(user);
     }
     public void setLikeCity(Long userId, Long cityId){
         CityEntity city = cityRepository.findById(cityId)
-                .orElseThrow(() -> new DataIntegrityViolationException(city_not_found));
+                .orElseThrow(() -> new DataIntegrityViolationException(CITY_NOT_FOUND));
         UserEntity user = usersRepository
-                .findById(userId).orElseThrow(() -> new DataIntegrityViolationException(user_not_found));
+                .findById(userId).orElseThrow(() -> new DataIntegrityViolationException(USER_NOT_FOUND));
         if(!user.getLikedCities().contains(city)) {
             user.getLikedCities().add(city);
         }
