@@ -6,6 +6,7 @@ import com.closer.citydistance.dto.SightDTO;
 import com.closer.citydistance.service.CityService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,11 @@ public class CityController {
     final CityService cityService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<CityDTO>> getAll() {
+    public ResponseEntity<List<CityDTO>> getAll(
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(cityService.getAll());
+            return ResponseEntity.ok().body(cityService.getAll(PageRequest.of(pageNumber,pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -56,28 +59,38 @@ public class CityController {
     }
 
     @GetMapping("/find_by_name_country")
-    public ResponseEntity<List<CityDTO>> findByNameAndCountry(@RequestParam String name,
-                                                              @RequestParam String country) {
+    public ResponseEntity<List<CityDTO>> findByNameAndCountry(
+            @RequestParam String name,
+            @RequestParam String country,
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(cityService.findByNameAndCountry(name, country));
+            return ResponseEntity.ok()
+                    .body(cityService.findByNameAndCountry(name, country, PageRequest.of(pageNumber,pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/find_by_sight_name")
-    public ResponseEntity<List<CityDTO>> findCityBySightName(@RequestParam(name = "name") String sightName) {
+    public ResponseEntity<List<CityDTO>> findCityBySightName(
+            @RequestParam(name = "name") String sightName,
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(cityService.findCityBySightName(sightName));
+            return ResponseEntity.ok().body(cityService.findCityBySightName(sightName, PageRequest.of(pageNumber,pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/get_sights")
-    public ResponseEntity<List<SightDTO>> getSights(@RequestParam(name = "id") Long cityId) {
+    public ResponseEntity<List<SightDTO>> getSights(
+            @RequestParam(name = "id") Long cityId,
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(cityService.getSights(cityId));
+            return ResponseEntity.ok().body(cityService.getSights(cityId, PageRequest.of(pageNumber,pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }

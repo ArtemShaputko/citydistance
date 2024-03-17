@@ -5,6 +5,7 @@ import com.closer.citydistance.dto.SightDTO;
 import com.closer.citydistance.service.SightService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +18,12 @@ public class SightController {
     private SightService sightService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<SightDTO>> getAll() {
+    public ResponseEntity<List<SightDTO>> getAll(
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize
+    ) {
         try {
-            return ResponseEntity.ok().body(sightService.getAll());
+            return ResponseEntity.ok().body(sightService.getAll(PageRequest.of(pageNumber,pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }

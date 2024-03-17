@@ -1,6 +1,7 @@
 package com.closer.citydistance.service;
 
 import com.closer.citydistance.cache.CacheMap;
+import com.closer.citydistance.mapper.Mapper;
 import com.closer.citydistance.model.City;
 import com.closer.citydistance.model.Sight;
 import com.closer.citydistance.dto.SightDTO;
@@ -9,6 +10,7 @@ import com.closer.citydistance.repository.SightRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +23,9 @@ public class SightService {
     private final CityRepository cityRepository;
     private final CacheMap<Long, Sight> sightCache;
 
-    public List<SightDTO> getAll() {
-        return sightRepository.findAll()
-                .stream().map(SightDTO::toDTO).toList();
+    public List<SightDTO> getAll(PageRequest pageRequest) {
+        return sightRepository.findAll(pageRequest).getContent()
+                .stream().map(Mapper::sightToDTO).toList();
     }
 
     public Sight add(Long cityId, Sight sight) {
@@ -36,9 +38,11 @@ public class SightService {
 
     public SightDTO find(Long sightId) {
         Sight sight = sightCache.get(sightId);
-        if(sight != null) return  SightDTO.toDTO(sight);
-        return SightDTO.toDTO(sightRepository.findById(sightId)
-                .orElseThrow(() -> new DataIntegrityViolationException("Sight not found")));
+        if(sight != null) return Mapper.sightToDTO(sight);
+        sight = sightRepository.findById(sightId)
+                .orElseThrow(() -> new DataIntegrityViolationException("Sight not found"));
+        if(sight != null) sightCache.put(sightId, sight);
+        return Mapper.sightToDTO(sight);
     }
 
     public void update(Long sightId, Sight sight) {

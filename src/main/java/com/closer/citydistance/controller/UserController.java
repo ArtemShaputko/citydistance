@@ -6,6 +6,7 @@ import com.closer.citydistance.dto.UserDTO;
 import com.closer.citydistance.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,10 @@ public class UserController {
     final UserService userService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDTO>> getAll() {
+    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+                                                @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(userService.getAll());
+            return ResponseEntity.ok().body(userService.getAll(PageRequest.of(pageNumber, pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -56,9 +58,12 @@ public class UserController {
     }
 
     @GetMapping("/liked_cities")
-    public ResponseEntity<List<CityDTO>> getLikedCities(@RequestParam(name = "id") Long userId) {
+    public ResponseEntity<List<CityDTO>> getLikedCities(
+            @RequestParam(name = "id") Long userId,
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(userService.getLikedCities(userId));
+            return ResponseEntity.ok().body(userService.getLikedCities(userId, PageRequest.of(pageNumber,pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -76,9 +81,13 @@ public class UserController {
     }
 
     @GetMapping("/liked_cities_country")
-    public ResponseEntity<List<UserDTO>> getUsersLikedCitiesWithCountry(@RequestParam(name = "country") String countryName) {
+    public ResponseEntity<List<UserDTO>> getUsersLikedCitiesWithCountry(
+            @RequestParam(name = "country") String countryName,
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "10") int pageSize) {
         try {
-            return ResponseEntity.ok().body(userService.getUsersLikedCitiesWithCountry(countryName));
+            return ResponseEntity.ok().body(userService.getUsersLikedCitiesWithCountry(countryName,
+                    PageRequest.of(pageNumber, pageSize)));
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }

@@ -11,11 +11,11 @@ import java.util.Map;
 @Component
 @Data
 public class CacheMap<K, V> extends LinkedHashMap<K, V> {
-    private static final Integer maxSize = 1000;
+    private static final Integer MAX_SIZE = 1000;
 
     @Override
     public boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return this.size()>=maxSize;
+        return this.size()>= MAX_SIZE;
     }
 
 }
