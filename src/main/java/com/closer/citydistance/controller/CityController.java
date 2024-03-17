@@ -1,8 +1,8 @@
 package com.closer.citydistance.controller;
 
 import com.closer.citydistance.model.City;
-import com.closer.citydistance.DTO.CityDTO;
-import com.closer.citydistance.DTO.SightDTO;
+import com.closer.citydistance.dto.CityDTO;
+import com.closer.citydistance.dto.SightDTO;
 import com.closer.citydistance.service.CityService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

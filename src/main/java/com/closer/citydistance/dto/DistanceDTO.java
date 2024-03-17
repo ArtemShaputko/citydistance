@@ -1,4 +1,4 @@
-package com.closer.citydistance.DTO;
+package com.closer.citydistance.dto;
 
 import lombok.Builder;
 import lombok.Data;

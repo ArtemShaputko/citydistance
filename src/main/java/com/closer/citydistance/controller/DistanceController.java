@@ -1,6 +1,6 @@
 package com.closer.citydistance.controller;
 
-import com.closer.citydistance.DTO.DistanceDTO;
+import com.closer.citydistance.dto.DistanceDTO;
 import com.closer.citydistance.service.DistanceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

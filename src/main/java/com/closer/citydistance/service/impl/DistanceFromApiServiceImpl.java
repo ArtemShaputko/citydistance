@@ -1,7 +1,7 @@
 package com.closer.citydistance.service.impl;
 
-import com.closer.citydistance.DTO.CityDTO;
-import com.closer.citydistance.DTO.DistanceDTO;
+import com.closer.citydistance.dto.CityDTO;
+import com.closer.citydistance.dto.DistanceDTO;
 import com.closer.citydistance.service.CalculatorService;
 import com.closer.citydistance.service.DistanceService;
 

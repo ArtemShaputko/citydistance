@@ -3,7 +3,7 @@ package com.closer.citydistance.service;
 import com.closer.citydistance.cache.CacheMap;
 import com.closer.citydistance.model.City;
 import com.closer.citydistance.model.Sight;
-import com.closer.citydistance.DTO.SightDTO;
+import com.closer.citydistance.dto.SightDTO;
 import com.closer.citydistance.repository.CityRepository;
 import com.closer.citydistance.repository.SightRepository;
 import jakarta.transaction.Transactional;

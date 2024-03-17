@@ -3,8 +3,8 @@ package com.closer.citydistance.service;
 import com.closer.citydistance.cache.CacheMap;
 import com.closer.citydistance.model.City;
 
-import com.closer.citydistance.DTO.CityDTO;
-import com.closer.citydistance.DTO.SightDTO;
+import com.closer.citydistance.dto.CityDTO;
+import com.closer.citydistance.dto.SightDTO;
 import com.closer.citydistance.repository.CityRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -54,8 +54,6 @@ public class CityService {
     }
 
     public List<SightDTO> getSights(Long cityId) {
-//        City cityFromCache = cityCache.get(cityId);
-//        if(cityFromCache != null) return cityFromCache.getSights().stream().map(SightDTO::toDTO).toList();
         City cityFromRepository = cityRepository
                 .findById(cityId)
                 .orElseThrow(() -> new DataIntegrityViolationException("City not found"));
