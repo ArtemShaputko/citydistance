@@ -1,8 +1,8 @@
 package com.closer.citydistance.service;
 
 
-import com.closer.citydistance.model.Distance;
+import com.closer.citydistance.DTO.DistanceDTO;
 
 public interface DistanceService {
-    Distance findDistance(String firstCityName, String secondCityName);
+    DistanceDTO findDistance(String firstCityName, String secondCityName);
 }

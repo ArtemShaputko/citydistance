@@ -1,24 +1,30 @@
 package com.closer.citydistance.model;
 
-import com.closer.citydistance.entity.CityEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 
 @Data
+@Entity
+@Table(name = "cities")
+@NoArgsConstructor
+@AllArgsConstructor
 public class City {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
     private String name;
     private String country;
     private double lon;
     private double lat;
 
-    public static City toModel(CityEntity entity){
-        if(entity==null) return null;
-        City model = new City();
-        model.setId(entity.getId());
-        model.setName(entity.getName());
-        model.setCountry(entity.getCountry());
-        model.setLon(entity.getLon());
-        model.setLat(entity.getLat());
-        return model;
-    }
+    @ManyToMany(mappedBy = "likedCities", fetch = FetchType.LAZY)
+    private List<User> userLikes;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "city")
+    private List<Sight> sights;
 }

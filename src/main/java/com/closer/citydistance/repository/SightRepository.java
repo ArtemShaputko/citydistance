@@ -1,7 +1,7 @@
 package com.closer.citydistance.repository;
 
-import com.closer.citydistance.entity.SightEntity;
+import com.closer.citydistance.model.Sight;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SightRepository extends JpaRepository<SightEntity, Long> {
+public interface SightRepository extends JpaRepository<Sight, Long> {
 }

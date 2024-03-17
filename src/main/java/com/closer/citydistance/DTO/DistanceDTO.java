@@ -1,11 +1,11 @@
-package com.closer.citydistance.model;
+package com.closer.citydistance.DTO;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class Distance {
+public class DistanceDTO {
     private double length;
     private String firstCityName;
     private String secondCityName;

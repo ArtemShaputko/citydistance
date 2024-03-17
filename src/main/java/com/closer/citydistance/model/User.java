@@ -1,23 +1,33 @@
 package com.closer.citydistance.model;
 
-import com.closer.citydistance.entity.UserEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
+@Entity
+@Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String name;
     private String surname;
+    @Column(unique = true)
     private String nickname;
+    @Column(unique = true)
     private String email;
-    public static User toModel(UserEntity entity){
-        if(entity==null) return null;
-        User model = new User();
-        model.setId(entity.getId());
-        model.setName(entity.getName());
-        model.setSurname(entity.getSurname());
-        model.setNickname(entity.getNickname());
-        model.setEmail(entity.getEmail());
-        return model;
-    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "city_likes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id")
+    )
+    private List<City> likedCities;
 }

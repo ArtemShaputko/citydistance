@@ -1,7 +1,7 @@
 package com.closer.citydistance.service.impl;
 
-import com.closer.citydistance.model.City;
-import com.closer.citydistance.model.Distance;
+import com.closer.citydistance.DTO.CityDTO;
+import com.closer.citydistance.DTO.DistanceDTO;
 import com.closer.citydistance.service.CalculatorService;
 import com.closer.citydistance.service.DistanceService;
 
@@ -20,43 +20,43 @@ public class DistanceFromApiServiceImpl implements DistanceService {
     private final CalculatorService distanceCalculator;
 
     @Value("${apiKey}")
-    private  String apiKey;
+    private String apiKey;
 
     @Value("${spring.datasource.password}")
     @Override
-    public Distance findDistance(String firstCityName, String secondCityName) {
+    public DistanceDTO findDistance(String firstCityName, String secondCityName) {
 
         String firstCityRequestURL = GEOCODING_API + firstCityName + "&limit=1&appid=" + apiKey;
         String secondCityRequestURL = GEOCODING_API + secondCityName + "&limit=1&appid=" + apiKey;
-        City firstCity;
-        City secondCity;
+        CityDTO firstCityDTO;
+        CityDTO secondCityDTO;
 
-        City[] firstCityResponse = WebClient.builder()
+        CityDTO[] firstCityResponseDTO = WebClient.builder()
                 .build()
                 .get()
                 .uri(firstCityRequestURL)
                 .retrieve()
-                .bodyToMono(City[].class)
+                .bodyToMono(CityDTO[].class)
                 .block();
-        City[] secondCityResponse = WebClient.builder()
+        CityDTO[] secondCityResponseDTO = WebClient.builder()
                 .build()
                 .get()
                 .uri(secondCityRequestURL)
                 .retrieve()
-                .bodyToMono(City[].class)
+                .bodyToMono(CityDTO[].class)
                 .block();
 
-        assert firstCityResponse != null;
-        firstCity = firstCityResponse[0];
-        assert secondCityResponse != null;
-        secondCity = secondCityResponse[0];
+        assert firstCityResponseDTO != null;
+        firstCityDTO = firstCityResponseDTO[0];
+        assert secondCityResponseDTO != null;
+        secondCityDTO = secondCityResponseDTO[0];
 
-        return Distance
+        return DistanceDTO
                 .builder()
-                .length(distanceCalculator.calculateDistance(Math.toRadians(firstCity.getLat()),
-                                Math.toRadians(firstCity.getLon()),
-                                Math.toRadians(secondCity.getLat()),
-                                Math.toRadians(secondCity.getLon())))
+                .length(distanceCalculator.calculateDistance(Math.toRadians(firstCityDTO.getLat()),
+                        Math.toRadians(firstCityDTO.getLon()),
+                        Math.toRadians(secondCityDTO.getLat()),
+                        Math.toRadians(secondCityDTO.getLon())))
                 .firstCityName(firstCityName)
                 .secondCityName(secondCityName)
                 .build();
