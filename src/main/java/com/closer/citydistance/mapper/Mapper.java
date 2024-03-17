@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Mapper {
+    private Mapper() {
+    }
+
     public static CityDTO cityToDTO(City model) {
         if (model == null) return null;
         CityDTO dto = new CityDTO();
@@ -20,6 +23,7 @@ public class Mapper {
         dto.setLat(model.getLat());
         return dto;
     }
+
     public static SightDTO sightToDTO(Sight model) {
         if (model == null) return null;
         SightDTO dto = new SightDTO();
@@ -28,6 +32,7 @@ public class Mapper {
         dto.setCityName(model.getCity().getName());
         return dto;
     }
+
     public static UserDTO userToDTO(User model) {
         if (model == null) return null;
         UserDTO dto = new UserDTO();
