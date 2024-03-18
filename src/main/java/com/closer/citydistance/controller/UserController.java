@@ -28,6 +28,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/recent")
+    public ResponseEntity<List<UserDTO>> getCache() {
+        try {
+            return ResponseEntity.ok().body(userService.getCache());
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody User user) {
         try {

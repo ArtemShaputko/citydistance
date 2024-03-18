@@ -1,6 +1,6 @@
 package com.closer.citydistance.service;
 
-import com.closer.citydistance.cache.CacheMap;
+import com.closer.citydistance.cache.Cache;
 import com.closer.citydistance.mapper.Mapper;
 import com.closer.citydistance.model.City;
 import com.closer.citydistance.model.User;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final CityRepository cityRepository;
-    private final CacheMap<Long, User> userCache;
+    private final Cache cache;
     private static final String USER_NOT_FOUND = "User not found";
     private static final String CITY_NOT_FOUND = "City not found";
 
@@ -32,20 +32,24 @@ public class UserService {
         return userRepository.findAll(pageRequest).getContent().stream().map(Mapper::userToDTO).toList();
     }
 
+    public List<UserDTO> getCache(){
+        return cache.getUserCache().sequencedValues().stream().map(Mapper::userToDTO).toList();
+    }
+
     public User add(User usr) {
         return userRepository.save(usr);
     }
 
     public void remove(Long userId) {
-        userCache.remove(userId);
+        cache.removeUser(userId);
         userRepository.deleteById(userId);
     }
 
     public UserDTO findById(Long userId) {
-        User user = userCache.get(userId);
+        User user = cache.getUserCache().get(userId);
         if (user != null) return Mapper.userToDTO(user);
         user = userRepository.findById(userId).orElse(null);
-        if(user != null ) userCache.put(userId, user);
+        if(user != null ) cache.getUserCache().put(userId, user);
         return Mapper.userToDTO(user);
     }
 
@@ -55,18 +59,24 @@ public class UserService {
                 .orElseThrow(() -> new DataIntegrityViolationException(USER_NOT_FOUND));
         int firstElement = (int) pageRequest.getOffset();
         int lastElement = firstElement + pageRequest.getPageSize();
-        if(firstElement >= user.getLikedCities().size()) return List.of();
-        if(lastElement >= user.getLikedCities().size()) lastElement = user.getLikedCities().size();
+        if(firstElement >= user.getLikedCities().size()) {
+            return List.of();
+        }
+        if(lastElement >= user.getLikedCities().size()) {
+            lastElement = user.getLikedCities().size();
+        }
         return user.getLikedCities()
                 .subList(firstElement, lastElement)
                 .stream().map(Mapper::cityToDTO).collect(Collectors.toList());
     }
 
     public void update(Long userId, User user) {
-        if (!userRepository.existsById(userId)) throw new DataIntegrityViolationException(USER_NOT_FOUND);
+        if (!userRepository.existsById(userId)) {
+            throw new DataIntegrityViolationException(USER_NOT_FOUND);
+        }
         user.setId(userId);
         userRepository.save(user);
-        userCache.replace(userId, user);
+        cache.removeUser(userId);
     }
 
     public List<UserDTO> getUsersLikedCitiesWithCountry(String countryName, PageRequest pageRequest) {
@@ -83,6 +93,8 @@ public class UserService {
             user.getLikedCities().add(city);
         }
         userRepository.save(user);
+        cache.getUserCache().remove(userId);
+        cache.getCityCache().remove(cityId);
     }
 
     public void removeLike(Long userId, Long cityId) {
@@ -92,7 +104,11 @@ public class UserService {
                 .findById(userId).orElseThrow(() -> new DataIntegrityViolationException(USER_NOT_FOUND));
         if (user.getLikedCities().contains(city)) {
             user.getLikedCities().remove(city);
-        } else throw new DataIntegrityViolationException("City not liked");
+        } else {
+            throw new DataIntegrityViolationException("City not liked");
+        }
         userRepository.save(user);
+        cache.getUserCache().remove(userId);
+        cache.getCityCache().remove(cityId);
     }
 }

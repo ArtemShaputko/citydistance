@@ -41,6 +41,7 @@ public class Mapper {
         dto.setSurname(model.getSurname());
         dto.setNickname(model.getNickname());
         dto.setEmail(model.getEmail());
+        dto.setCities(model.getLikedCities().stream().map(Mapper::cityToDTO).toList());
         return dto;
     }
 }

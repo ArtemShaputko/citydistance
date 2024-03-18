@@ -1,5 +1,6 @@
 package com.closer.citydistance.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,5 +14,6 @@ public class Sight {
     private String name;
     @ManyToOne
     @JoinColumn(name = "city_id")
+    @JsonIgnore
     private City city;
 }

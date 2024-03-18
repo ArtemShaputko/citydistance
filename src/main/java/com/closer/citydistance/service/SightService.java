@@ -1,6 +1,6 @@
 package com.closer.citydistance.service;
 
-import com.closer.citydistance.cache.CacheMap;
+import com.closer.citydistance.cache.Cache;
 import com.closer.citydistance.mapper.Mapper;
 import com.closer.citydistance.model.City;
 import com.closer.citydistance.model.Sight;
@@ -21,7 +21,7 @@ import java.util.List;
 public class SightService {
     private final SightRepository sightRepository;
     private final CityRepository cityRepository;
-    private final CacheMap<Long, Sight> sightCache;
+    private final Cache cache;
 
     public List<SightDTO> getAll(PageRequest pageRequest) {
         return sightRepository.findAll(pageRequest).getContent()
@@ -37,11 +37,15 @@ public class SightService {
     }
 
     public SightDTO find(Long sightId) {
-        Sight sight = sightCache.get(sightId);
-        if(sight != null) return Mapper.sightToDTO(sight);
+        Sight sight = cache.getSightCache().get(sightId);
+        if(sight != null) {
+            return Mapper.sightToDTO(sight);
+        }
         sight = sightRepository.findById(sightId)
                 .orElseThrow(() -> new DataIntegrityViolationException("Sight not found"));
-        if(sight != null) sightCache.put(sightId, sight);
+        if(sight != null) {
+            cache.getSightCache().put(sightId, sight);
+        }
         return Mapper.sightToDTO(sight);
     }
 
@@ -51,11 +55,11 @@ public class SightService {
         sight.setId(sightId);
         sight.setCity(oldSight.getCity());
         sightRepository.save(sight);
-        sightCache.replace(sightId, sight);
+        cache.removeSight(sightId);
     }
 
     public void remove(Long sightId) {
-        sightCache.remove(sightId);
+        cache.removeSight(sightId);
         sightRepository.deleteById(sightId);
     }
 }

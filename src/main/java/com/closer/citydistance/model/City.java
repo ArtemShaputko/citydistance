@@ -1,5 +1,6 @@
 package com.closer.citydistance.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,8 +24,10 @@ public class City {
     private double lat;
 
     @ManyToMany(mappedBy = "likedCities", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<User> userLikes;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "city")
+    @JsonIgnore
     private List<Sight> sights;
 }

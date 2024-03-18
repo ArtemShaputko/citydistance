@@ -1,5 +1,6 @@
 package com.closer.citydistance.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id")
     )
+    @JsonIgnore
     private List<City> likedCities;
 }

@@ -1,32 +1,36 @@
 package com.closer.citydistance.service;
 
-import com.closer.citydistance.cache.CacheMap;
+import com.closer.citydistance.cache.Cache;
 import com.closer.citydistance.mapper.Mapper;
 import com.closer.citydistance.model.City;
 
 import com.closer.citydistance.dto.CityDTO;
 import com.closer.citydistance.dto.SightDTO;
+import com.closer.citydistance.model.User;
 import com.closer.citydistance.repository.CityRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 @Transactional
-public class CityService {
+public class    CityService {
     private final CityRepository cityRepository;
-    private final CacheMap<Long, City> cityCache;
+    private final Cache cache;
 
     public CityDTO find(Long cityId) {
-        City city = cityCache.get(cityId);
-        if (city != null) return Mapper.cityToDTO(city);
+        City city = cache.getCityCache().get(cityId);
+        if (city != null) {
+            return Mapper.cityToDTO(city);
+        }
         city = cityRepository.findById(cityId).orElse(null);
-        if (city != null) cityCache.put(city.getId(), city);
+        if (city != null) {
+            cache.getCityCache().put(city.getId(), city);
+        }
         return Mapper.cityToDTO(city);
     }
 
@@ -41,8 +45,14 @@ public class CityService {
     }
 
     public void remove(Long cityId) {
-        cityCache.remove(cityId);
-        cityRepository.deleteById(cityId);
+        cache.removeCity(cityId);
+        City city = cityRepository.findById(cityId).orElse(null);
+        if(city != null) {
+            for (User user : city.getUserLikes()) {
+                user.getLikedCities().remove(city);
+            }
+            cityRepository.delete(city);
+        }
     }
 
     public List<CityDTO> findByNameAndCountry(String name, String country, PageRequest pageRequest) {
@@ -61,17 +71,22 @@ public class CityService {
                 .orElseThrow(() -> new DataIntegrityViolationException("City not found"));
         int firstElement = (int) pageRequest.getOffset();
         int lastElement = firstElement + pageRequest.getPageSize();
-        if(firstElement >= city.getSights().size()) return List.of();
-        if(lastElement >= city.getSights().size()) lastElement = city.getSights().size();
+        if(firstElement >= city.getSights().size()) {
+            return List.of();
+        }
+        if(lastElement >= city.getSights().size()) {
+            lastElement = city.getSights().size();
+        }
         return city.getSights().subList(firstElement,lastElement)
                 .stream().map(Mapper::sightToDTO).toList();
     }
 
     public void update(Long cityId, City city) {
-        if (!cityRepository.existsById(cityId))
+        if (!cityRepository.existsById(cityId)) {
             throw new DataIntegrityViolationException("City " + cityId + " not found");
+        }
         city.setId(cityId);
-        cityCache.replace(cityId, city);
+        cache.removeCity(cityId);
         cityRepository.save(city);
     }
 }
